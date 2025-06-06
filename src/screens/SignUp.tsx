@@ -1,5 +1,15 @@
 import { AuthNavigatorRoutesProps } from "@/routes/auth.routes";
-import { Box, Button, ButtonText, Center, Input, InputField, Pressable, Text, VStack } from "@gluestack-ui/themed";
+import {
+  Box,
+  Button,
+  ButtonText,
+  Center,
+  Input,
+  InputField,
+  Pressable,
+  Text,
+  VStack,
+} from "@gluestack-ui/themed";
 import { useNavigation } from "@react-navigation/native";
 
 export function SignUp() {
@@ -14,14 +24,18 @@ export function SignUp() {
 
         <VStack space="lg" w="70%">
           <Box>
-            <Text fontWeight="$bold" color="$black">Nome</Text>
+            <Text fontWeight="$bold" color="$black">
+              Nome
+            </Text>
             <Input variant="outline" borderRadius="$md" borderColor="$black">
               <InputField />
             </Input>
           </Box>
 
           <Box>
-            <Text fontWeight="$bold" color="$black">Email</Text>
+            <Text fontWeight="$bold" color="$black">
+              Email
+            </Text>
             <Input variant="outline" borderRadius="$md" borderColor="$black">
               <InputField keyboardType="email-address" />
             </Input>
@@ -29,36 +43,41 @@ export function SignUp() {
 
           {/*Alterar para um date picker melhor  */}
           <Box>
-            <Text fontWeight="$bold" color="$black">Data de nascimento</Text>
+            <Text fontWeight="$bold" color="$black">
+              Data de nascimento
+            </Text>
             <Input variant="outline" borderRadius="$md" borderColor="$black">
-              <InputField
-                keyboardType="numeric"
-                maxLength={10}
-              />
+              <InputField keyboardType="numeric" maxLength={10} />
             </Input>
           </Box>
 
           <Box>
-            <Text fontWeight="$bold" color="$black">Senha</Text>
+            <Text fontWeight="$bold" color="$black">
+              Senha
+            </Text>
             <Input variant="outline" borderRadius="$md" borderColor="$black">
               <InputField secureTextEntry={true} />
             </Input>
           </Box>
 
           <Box>
-            <Text fontWeight="$bold" color="$black">Confirmar senha</Text>
+            <Text fontWeight="$bold" color="$black">
+              Confirmar senha
+            </Text>
             <Input variant="outline" borderRadius="$md" borderColor="$black">
               <InputField secureTextEntry={true} />
             </Input>
           </Box>
         </VStack>
 
-        <Button mt="$10" bg="$green600" borderRadius="$xl" w="70%" height={50}>
+        <Button mt="$10" bg="$green" borderRadius="$xl" w="70%" height={50}>
           <ButtonText fontSize="$lg">Criar</ButtonText>
         </Button>
 
         <Pressable p="$2" onPress={() => navigate("signIn")}>
-          <Text color="$black" fontSize="$sm">Voltar</Text>
+          <Text color="$black" fontSize="$sm">
+            Voltar
+          </Text>
         </Pressable>
       </Center>
     </Box>

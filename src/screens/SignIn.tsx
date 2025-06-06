@@ -1,5 +1,15 @@
 import { AuthNavigatorRoutesProps } from "@/routes/auth.routes";
-import { Box, Button, ButtonText, Center, Input, InputField, Pressable, Text, VStack } from "@gluestack-ui/themed";
+import {
+  Box,
+  Button,
+  ButtonText,
+  Center,
+  Input,
+  InputField,
+  Pressable,
+  Text,
+  VStack,
+} from "@gluestack-ui/themed";
 import { useNavigation } from "@react-navigation/native";
 
 export function SignIn() {
@@ -14,26 +24,32 @@ export function SignIn() {
 
         <VStack space="lg" w="70%">
           <Box>
-            <Text fontWeight="$bold" color="$black">Email</Text>
+            <Text fontWeight="$bold" color="$black">
+              Email
+            </Text>
             <Input variant="outline" borderRadius="$md" borderColor="$black">
               <InputField keyboardType="email-address" />
             </Input>
           </Box>
 
           <Box>
-            <Text fontWeight="$bold" color="$black">Senha</Text>
+            <Text fontWeight="$bold" color="$black">
+              Senha
+            </Text>
             <Input variant="outline" borderRadius="$md" borderColor="$black">
-              <InputField secureTextEntry={true}/>
+              <InputField secureTextEntry={true} />
             </Input>
           </Box>
         </VStack>
 
-        <Button mt="$10" bg="$green600" borderRadius="$xl" w="70%" height={50}>
+        <Button mt="$10" bg="$green" borderRadius="$xl" w="70%" height={50}>
           <ButtonText fontSize="$lg">Entrar</ButtonText>
         </Button>
 
         <Pressable p="$2" onPress={() => navigate("signUp")}>
-          <Text color="$black" fontSize="$sm">Não possui conta? Crie aqui</Text>
+          <Text color="$black" fontSize="$sm">
+            Não possui conta? Crie aqui
+          </Text>
         </Pressable>
       </Center>
     </Box>
