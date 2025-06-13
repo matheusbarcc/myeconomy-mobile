@@ -3,7 +3,6 @@ import { Icon } from "phosphor-react-native";
 import { ComponentProps } from "react";
 import { gluestackUIConfig } from "../../config/gluestack-ui.config";
 
-
 type Props = ComponentProps<typeof InputField> & {
   label?: string;
   icon?: Icon;
