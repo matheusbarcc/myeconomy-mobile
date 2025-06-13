@@ -3,16 +3,19 @@ import {
   Center,
   Text,
   VStack,
-  Button,
-  ButtonText,
   Input,
   InputField,
   Progress,
   HStack,
+  ProgressFilledTrack,
 } from "@gluestack-ui/themed";
+import { LinearGradient } from "expo-linear-gradient";
+import { gluestackUIConfig } from "../../config/gluestack-ui.config";
 
 export function Home() {
-  const valorAtual = 1100;
+  const theme = gluestackUIConfig.tokens.colors;
+
+  const valorAtual = 1300;
   const valorMeta = 1500;
   const progresso = (valorAtual / valorMeta) * 100;
 
@@ -26,9 +29,9 @@ export function Home() {
       </Box>
 
       <Center flex={1} px="$8" py="$8">
-        <VStack space="lg" w="80%">
+        <VStack space="xs" w="80%">
           {/* Campo de mês */}
-          <Box>
+          <Box gap="$6">
             <Input variant="outline" borderRadius="$md" borderColor="$black">
               <InputField
                 keyboardType="numeric"
@@ -37,12 +40,31 @@ export function Home() {
                 bg="grey"
               />
             </Input>
+            <LinearGradient
+              colors={[theme.green, theme.green200]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 0, y: 1 }}
+              style={{
+                borderRadius: 10,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Center mb="$3" p="$11" borderRadius="$xl">
+                <Text textAlign="center" fontSize="$7xl">
+                  🙂
+                </Text>
+                <Text color="$black" fontSize="$lg">
+                  Continue assim!
+                </Text>
+              </Center>
+            </LinearGradient>
           </Box>
 
           <Box>
-            <HStack justifyContent="space-between" mb="$2">
+            <HStack justifyContent="space-between" mb="$2" mt="$4">
               <Text fontWeight="$bold">Progresso</Text>
-              <Text color="$green600">
+              <Text color="$black">
                 R${valorAtual}/{`R$${valorMeta}`}
               </Text>
             </HStack>
@@ -53,7 +75,9 @@ export function Home() {
               h="$10"
               bg="$coolGray200"
               borderRadius="$xl"
-            />
+            >
+              <ProgressFilledTrack bg="$green" />
+            </Progress>
           </Box>
         </VStack>
       </Center>
