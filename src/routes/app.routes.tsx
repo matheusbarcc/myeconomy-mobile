@@ -17,6 +17,7 @@ import Bank from "phosphor-react-native/src/icons/Bank";
 import { Box } from "@gluestack-ui/themed";
 import { Expenses } from "@/screens/Expenses";
 import { Budgets } from "@/screens/Budgets";
+import { History } from "@/screens/History";
 
 type AppRoutes = {
   home: undefined;
@@ -27,6 +28,7 @@ type AppRoutes = {
   budgets: {
     id?: string;
   };
+  history: undefined
 };
 
 export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutes>;
@@ -139,6 +141,14 @@ export function AppRoutes() {
             </Box>
           ),
           tabBarLabel: "Limites",
+        }}
+      />
+      <Screen
+        name="history"
+        component={History}
+        options={{
+          tabBarButton: () => null,
+          tabBarItemStyle: { display: "none" },
         }}
       />
     </Navigator>

@@ -1,14 +1,23 @@
 import { Input } from "@/components/Input";
 import { Dropdown } from "@/components/Dropdown";
+import { Button } from "@/components/Button";
 import { Box, Center, Text, VStack } from "@gluestack-ui/themed";
 import { useState } from "react";
 import { Pressable } from 'react-native';
+import { AppNavigatorRoutesProps } from "@/routes/app.routes";
+import { useNavigation } from "@react-navigation/native";
 
 export function Expenses() {
 
   const [description, setDescription] = useState('');
   const [value, setValue] = useState('');
   const [month, setMonth] = useState('');
+
+  const { navigate } = useNavigation<AppNavigatorRoutesProps>();
+
+  function handleNavigateToHistory() {
+    navigate('history');
+  }
 
   return (
     <Center flex={1} px="$12">
@@ -50,21 +59,11 @@ export function Expenses() {
           value={month}
           onChange={setMonth}
         />
-        <Pressable>
-          <Box
-            mt="$2"
-            bg="$green600"
-            p="$3"
-            w="100%"
-            rounded="$md"
-            alignItems="center"
-            alignSelf="center"
-          >
-            <Text color="$white" fontWeight="$bold">
-              SALVAR
-            </Text>
-          </Box>
-        </Pressable>
+        <Button label={"Salvar"}></Button>
+        <Button
+          label="Histórico"
+          onPress={handleNavigateToHistory}
+        />
       </VStack>
     </Center>
   );

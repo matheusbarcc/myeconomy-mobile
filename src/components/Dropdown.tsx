@@ -8,6 +8,8 @@ import {
     View,
 } from "@gluestack-ui/themed";
 import { CaretDown } from "phosphor-react-native";
+import { FlatList } from 'react-native';
+
 
 type Option = {
     label: string;
@@ -21,6 +23,7 @@ type DropdownProps = {
     onChange: (value: string) => void;
     errorMessage?: string | null;
     isInvalid?: boolean;
+    placeholder?: string;
 };
 
 export function Dropdown({
@@ -30,11 +33,12 @@ export function Dropdown({
     onChange,
     errorMessage = null,
     isInvalid = false,
+    placeholder,
 }: DropdownProps) {
     const [open, setOpen] = useState(false);
 
     const invalid = !!errorMessage || isInvalid;
-    const selectedLabel = options.find((o) => o.value === value)?.label ?? "Selecione";
+    const selectedLabel = options.find((o) => o.value === value)?.label ?? placeholder ?? "Selecione";
 
     return (
         <FormControl isInvalid={invalid} w="$full">
@@ -65,24 +69,28 @@ export function Dropdown({
                     bg="$base600"
                     borderWidth={1}
                     borderColor="$base500"
-                    mt="$2" 
+                    mt="$2"
                     rounded="$md"
                     maxHeight={150}
                     overflow="hidden"
                 >
-                    {options.map((option) => (
-                        <Pressable
-                            key={option.value}
-                            px="$4"
-                            py="$3"
-                            onPress={() => {
-                                onChange(option.value);
-                                setOpen(false);
-                            }}
-                        >
-                            <Text color="$black">{option.label}</Text>
-                        </Pressable>
-                    ))}
+                    <FlatList
+                        data={options}
+                        showsVerticalScrollIndicator={false}
+                        keyExtractor={(item) => item.value}
+                        renderItem={({ item }) => (
+                            <Pressable
+                                px="$4"
+                                py="$3"
+                                onPress={() => {
+                                    onChange(item.value);
+                                    setOpen(false);
+                                }}
+                            >
+                                <Text color="$black">{item.label}</Text>
+                            </Pressable>
+                        )}
+                    />
                 </Box>
             )}
 
