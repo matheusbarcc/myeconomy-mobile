@@ -18,6 +18,7 @@ import { Box } from "@gluestack-ui/themed";
 import { Expenses } from "@/screens/Expenses";
 import { Budgets } from "@/screens/Budgets";
 import { History } from "@/screens/History";
+import { Consult } from "@/screens/Consult";
 
 type AppRoutes = {
   home: undefined;
@@ -28,7 +29,8 @@ type AppRoutes = {
   budgets: {
     id?: string;
   };
-  history: undefined
+  history: undefined;
+  consult: undefined;
 };
 
 export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutes>;
@@ -146,6 +148,14 @@ export function AppRoutes() {
       <Screen
         name="history"
         component={History}
+        options={{
+          tabBarButton: () => null,
+          tabBarItemStyle: { display: "none" },
+        }}
+      />
+      <Screen
+        name="consult"
+        component={Consult}
         options={{
           tabBarButton: () => null,
           tabBarItemStyle: { display: "none" },

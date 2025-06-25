@@ -1,11 +1,10 @@
-import { Input } from "@/components/Input";
-import { Dropdown } from "@/components/Dropdown";
 import { Button } from "@/components/Button";
-import { Box, Center, Text, VStack } from "@gluestack-ui/themed";
-import { useState } from "react";
-import { Pressable } from 'react-native';
+import { Dropdown } from "@/components/Dropdown";
+import { Input } from "@/components/Input";
 import { AppNavigatorRoutesProps } from "@/routes/app.routes";
+import { Box, Center, Text, VStack } from "@gluestack-ui/themed";
 import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
 
 export function Expenses() {
 
@@ -59,9 +58,9 @@ export function Expenses() {
           value={month}
           onChange={setMonth}
         />
-        <Button label={"Salvar"}></Button>
+        <Button label={"SALVAR"}></Button>
         <Button
-          label="Histórico"
+          label="HISTÓRICO"
           onPress={handleNavigateToHistory}
         />
       </VStack>

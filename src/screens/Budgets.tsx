@@ -1,13 +1,21 @@
-import { Box, Center, Text, VStack } from "@gluestack-ui/themed";
-import { Input } from "@/components/Input";
+import { Button } from "@/components/Button";
 import { Dropdown } from "@/components/Dropdown";
+import { Input } from "@/components/Input";
+import { AppNavigatorRoutesProps } from "@/routes/app.routes";
+import { Box, Center, Text, VStack } from "@gluestack-ui/themed";
+import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import { Pressable } from 'react-native';
 
 export function Budgets() {
   const [description, setDescription] = useState('');
   const [value, setValue] = useState('');
   const [month, setMonth] = useState('');
+
+  const { navigate } = useNavigation<AppNavigatorRoutesProps>();
+
+  function handleNavigateToConsult() {
+    navigate('consult');
+  }
 
   return (
     <Center flex={1} px="$12">
@@ -42,21 +50,15 @@ export function Budgets() {
           value={month}
           onChange={setMonth}
         />
-        <Pressable>
-          <Box
-            mt="$2"
-            bg="$green600"
-            p="$3"
-            w="100%"
-            rounded="$md"
-            alignItems="center"
-            alignSelf="center"
-          >
-            <Text color="$white" fontWeight="$bold">
-              SALVAR
-            </Text>
-          </Box>
-        </Pressable>
+        <Button
+          label="SALVAR"
+          onPress={() => {
+          }}
+        />
+        <Button
+          label="CONSULTAR"
+          onPress={handleNavigateToConsult}
+        />
       </VStack>
     </Center>
   );

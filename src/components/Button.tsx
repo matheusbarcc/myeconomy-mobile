@@ -2,7 +2,7 @@ import { Pressable } from "react-native";
 import { Box, Text } from "@gluestack-ui/themed";
 import { ComponentProps } from "react";
 
-type ButtonProps =  ComponentProps<typeof Pressable> & {
+type ButtonProps = ComponentProps<typeof Pressable> & {
     label: string;
     bgColor?: string;
     textColor?: string;
@@ -15,7 +15,7 @@ export function Button({
     ...rest
 }: ButtonProps) {
     return (
-        <Pressable {...rest} style={{ width: '100%' }}>
+        <Pressable {...rest}>
             <Box
                 mt="$2"
                 bg={bgColor}
