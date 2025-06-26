@@ -1,19 +1,28 @@
 import { Button } from "@/components/Button";
 import { Dropdown } from "@/components/Dropdown";
 import { Input } from "@/components/Input";
-import { AppNavigatorRoutesProps } from "@/routes/app.routes";
-import { Box, Center, Text, useToast, VStack } from "@gluestack-ui/themed";
-import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Controller, useForm } from "react-hook-form";
 import { ToastMessage } from "@/components/ToastMessage";
+import { AppNavigatorRoutesProps } from "@/routes/app.routes";
+import {
+  BudgetResponse,
+  getBudgetById,
+  updateBudget,
+} from "@/services/budget/budgetResource";
 import { AppError } from "@/utils/AppError";
 import { getFirstDayOfMonth, MonthValue } from "@/utils/getFirstDayOfMonth";
-import { createBudget } from "@/services/budget/budgetResource";
+import { getMonthFromDate } from "@/utils/getMonthFromDate";
+import { Box, Center, Text, useToast, VStack } from "@gluestack-ui/themed";
+import { yupResolver } from "@hookform/resolvers/yup";
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
+import { useCallback, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import * as yup from "yup";
 
-const createBudgetSchema = yup.object({
+const updateBudgetSchema = yup.object({
   amountInCents: yup
     .number()
     .required("O valor é obrigatório.")
@@ -22,10 +31,17 @@ const createBudgetSchema = yup.object({
   date: yup.date().required("A data é obrigatória."),
 });
 
-type createBudgetData = yup.InferType<typeof createBudgetSchema>;
+type updateBudgetData = yup.InferType<typeof updateBudgetSchema>;
 
-export function Budgets() {
+type RouteParams = {
+  id: string;
+};
+
+export function UpdateBudget() {
   const [month, setMonth] = useState<MonthValue | undefined>();
+
+  const route = useRoute();
+  const { id } = route.params as RouteParams;
 
   const {
     control,
@@ -34,16 +50,26 @@ export function Budgets() {
     setValue,
     formState: { errors, isSubmitting },
   } = useForm({
-    resolver: yupResolver(createBudgetSchema),
+    resolver: yupResolver(updateBudgetSchema),
   });
 
   const toast = useToast();
 
   const { navigate } = useNavigation<AppNavigatorRoutesProps>();
 
-  async function handleCreateBudget(data: createBudgetData) {
+  async function getUserBudgetById(budgetId: string) {
+    const data = await getBudgetById(budgetId);
+
+    const budget: BudgetResponse = data.budget;
+
+    setValue("amountInCents", budget.amount_in_cents / 100);
+    setValue("date", new Date(budget.date));
+    setMonth(getMonthFromDate(new Date(budget.date)));
+  }
+
+  async function handleUpdateBudget(data: updateBudgetData) {
     try {
-      await createBudget(data);
+      await updateBudget({ ...data, id });
 
       toast.show({
         placement: "top",
@@ -51,20 +77,20 @@ export function Budgets() {
         render: ({ id }) => (
           <ToastMessage
             id={id}
-            title="Limite criado com sucesso!"
+            title="Limite editado com sucesso!"
             action="success"
           />
         ),
       });
 
-      reset();
       setMonth(undefined);
+      navigate("consult");
     } catch (error) {
       const isAppError = error instanceof AppError;
 
       const title = isAppError
         ? error.message
-        : "Não foi possível criar o limite. Tente novamente mais tarde.";
+        : "Não foi possível editar o limite. Tente novamente mais tarde.";
 
       toast.show({
         placement: "top",
@@ -86,6 +112,12 @@ export function Budgets() {
       shouldValidate: true,
     });
   }
+
+  useFocusEffect(
+    useCallback(() => {
+      getUserBudgetById(id);
+    }, [id])
+  );
 
   return (
     <Center flex={1} px="$12">
@@ -138,7 +170,7 @@ export function Budgets() {
           </Text>
         )}
 
-        <Button label="SALVAR" onPress={handleSubmit(handleCreateBudget)} />
+        <Button label="SALVAR" onPress={handleSubmit(handleUpdateBudget)} />
         <Button label="CONSULTAR" onPress={handleNavigateToConsult} />
       </VStack>
     </Center>

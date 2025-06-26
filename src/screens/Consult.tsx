@@ -1,64 +1,106 @@
-import { Box, Center, FlatList, Text, VStack } from "@gluestack-ui/themed";
-import { useState } from "react";
+import { Box, Center, Text, useToast, VStack } from "@gluestack-ui/themed";
+import { useCallback, useState } from "react";
 import { Card } from "@/components/Card";
-
-type BudgetItem = {
-    id: string;
-    description: string;
-    value: string;
-};
+import { Alert, FlatList } from "react-native";
+import {
+  BudgetResponse,
+  deleteBudget,
+  fetchUserBudgets,
+} from "@/services/budget/budgetResource";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { getPortugueseMonthAndYear } from "@/utils/getPortugueseMonthAndYear";
+import { AppError } from "@/utils/AppError";
+import { ToastMessage } from "@/components/ToastMessage";
+import { AppNavigatorRoutesProps } from "@/routes/app.routes";
 
 export function Consult() {
-    // const [budgets] = useState<BudgetItem[]>([
-    //     { id: "1", description: "Janeiro/2024", value: "R$2.000" },
-    //     { id: "2", description: "Fevereiro/2024", value: "R$1.800" },
-    //     { id: "3", description: "Março/2024", value: "R$2.100" },
-    //     { id: "4", description: "Abril/2024", value: "R$2.000" },
-    //     { id: "5", description: "Maio/2024", value: "R$1.900" },
-    //     { id: "6", description: "Junho/2024", value: "R$2.300" },
-    //     { id: "6", description: "Junho/2024", value: "R$2.300" },
-    //     { id: "6", description: "Junho/2024", value: "R$2.300" },
-    //     { id: "6", description: "Junho/2024", value: "R$2.300" },
-    //     { id: "6", description: "Junho/2024", value: "R$2.300" },
-    //     { id: "6", description: "Junho/2024", value: "R$2.300" },
-    //     { id: "6", description: "Junho/2024", value: "R$2.300" },
-    //     // ...adicione os outros meses conforme desejar
-    // ]);
+  const [budgets, setBudgets] = useState<BudgetResponse[]>([]);
 
-    // const handleEdit = (id: string) => {
-    //     console.log("Editar", id);
-    // };
+  const navigation = useNavigation<AppNavigatorRoutesProps>();
 
-    // const handleDelete = (id: string) => {
-    //     console.log("Excluir", id);
-    // };
+  const toast = useToast();
 
-    // const renderItem = ({ item }: { item: BudgetItem }) => (
-    //     <Box mb="$4">
-    //         <Card
-    //             description={item.description}
-    //             value={item.value}
-    //             onEdit={() => handleEdit(item.id)}
-    //             onDelete={() => handleDelete(item.id)}
-    //         />
-    //     </Box>
-    // );
+  async function fetchBudgets() {
+    const data = await fetchUserBudgets();
 
-    // return (
-    //     <Center flex={1} px="$12">
-    //         <VStack w="100%" pt="$16" space="md">
-    //             <Text fontWeight="$bold" fontSize="$2xl" textAlign="center" mb="$4">
-    //                 Consulta
-    //             </Text>
+    setBudgets(data.budgets);
+  }
 
-    //             <FlatList<BudgetItem>
-    //                 data={budgets}
-    //                 keyExtractor={(item) => item.id}
-    //                 renderItem={renderItem}
-    //                 showsVerticalScrollIndicator={false}
-    //                 contentContainerStyle={{ paddingBottom: 20 }}
-    //             />
-    //         </VStack>
-    //     </Center>
-    // );
+  const handleEdit = (id: string) => {
+    navigation.navigate("updateBudget", { id });
+  };
+
+  async function handleDelete(id: string) {
+    try {
+      Alert.alert(
+        "Excluir limite",
+        "A limite não poderá ser recuperada, você deseja excluí-la?",
+        [
+          {
+            text: "Sim",
+            onPress: async () => {
+              await deleteBudget(id);
+
+              setBudgets((state) => state.filter((state) => state.id !== id));
+            },
+            style: "destructive",
+          },
+          {
+            text: "Não",
+            onPress: () => {},
+            style: "cancel",
+          },
+        ]
+      );
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+
+      const title = isAppError
+        ? error.message
+        : "Não foi possível excluir a senha. Tente novamente mais tarde.";
+
+      toast.show({
+        placement: "top",
+        render: ({ id }) => (
+          <ToastMessage id={id} title={title} action="error" />
+        ),
+      });
+    }
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchBudgets();
+    }, [])
+  );
+
+  return (
+    <Center flex={1} px="$12">
+      <VStack w="100%" pt="$16" space="md">
+        <Text fontWeight="$bold" fontSize="$2xl" textAlign="center" mb="$4">
+          Consulta
+        </Text>
+
+        <FlatList
+          data={budgets}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <Box mb="$4">
+              <Card
+                description={getPortugueseMonthAndYear(new Date(item.date))}
+                value={(item.amount_in_cents / 100).toLocaleString("pt-br", {
+                  style: "currency",
+                  currency: "BRL",
+                })}
+                onEdit={() => handleEdit(item.id)}
+                onDelete={() => handleDelete(item.id)}
+              />
+            </Box>
+          )}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 20 }}
+        />
+      </VStack>
+    </Center>
+  );
 }
