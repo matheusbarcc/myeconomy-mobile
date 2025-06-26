@@ -38,7 +38,6 @@ export function DatePicker({
   function showDatepicker() {
     DateTimePickerAndroid.open({
       value: value ? new Date(value) : new Date(),
-      maximumDate: new Date(),
       onChange: handleChange,
       mode: "date",
     });

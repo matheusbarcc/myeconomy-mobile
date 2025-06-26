@@ -19,14 +19,18 @@ import { Expenses } from "@/screens/Expenses";
 import { Budgets } from "@/screens/Budgets";
 import { History } from "@/screens/History";
 import { Consult } from "@/screens/Consult";
+import { UpdateExpense } from "@/screens/UpdateExpenses";
+import { UpdateBudget } from "@/screens/UpdateBudget";
 
 type AppRoutes = {
   home: undefined;
   profile: undefined;
-  expenses: {
-    id?: string;
+  expenses: undefined;
+  updateExpense: {
+    id: string;
   };
-  budgets: {
+  budgets: undefined;
+  updateBudget: {
     id?: string;
   };
   history: undefined;
@@ -153,14 +157,30 @@ export function AppRoutes() {
           tabBarItemStyle: { display: "none" },
         }}
       />
-      {/* <Screen
+      <Screen
+        name="updateExpense"
+        component={UpdateExpense}
+        options={{
+          tabBarButton: () => null,
+          tabBarItemStyle: { display: "none" },
+        }}
+      />
+      <Screen
         name="consult"
         component={Consult}
         options={{
           tabBarButton: () => null,
           tabBarItemStyle: { display: "none" },
         }}
-      /> */}
+      />
+      <Screen
+        name="updateBudget"
+        component={UpdateBudget}
+        options={{
+          tabBarButton: () => null,
+          tabBarItemStyle: { display: "none" },
+        }}
+      />
     </Navigator>
   );
 }

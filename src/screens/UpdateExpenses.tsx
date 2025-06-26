@@ -3,15 +3,24 @@ import { DatePicker } from "@/components/DatePicker";
 import { Input } from "@/components/Input";
 import { ToastMessage } from "@/components/ToastMessage";
 import { AppNavigatorRoutesProps } from "@/routes/app.routes";
-import { createExpense } from "@/services/expense/expenseResource";
+import {
+  updateExpense,
+  ExpenseResponse,
+  getExpenseById,
+} from "@/services/expense/expenseResource";
 import { AppError } from "@/utils/AppError";
 import { Box, Center, Text, useToast, VStack } from "@gluestack-ui/themed";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useNavigation } from "@react-navigation/native";
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
+import { useCallback, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 
-const createExpenseSchema = yup.object({
+const updateExpenseSchema = yup.object({
   description: yup.string().required("A descrição é obrigatória."),
   amountInCents: yup
     .number()
@@ -21,9 +30,16 @@ const createExpenseSchema = yup.object({
   date: yup.date().required("A data é obrigatória."),
 });
 
-type createExpenseData = yup.InferType<typeof createExpenseSchema>;
+type updateExpenseData = yup.InferType<typeof updateExpenseSchema>;
 
-export function Expenses() {
+type RouteParams = {
+  id: string;
+};
+
+export function UpdateExpense() {
+  const router = useRoute();
+  const { id } = (router.params as RouteParams) || {};
+
   const {
     control,
     handleSubmit,
@@ -31,16 +47,26 @@ export function Expenses() {
     setValue,
     formState: { errors, isSubmitting },
   } = useForm({
-    resolver: yupResolver(createExpenseSchema),
+    resolver: yupResolver(updateExpenseSchema),
   });
 
   const toast = useToast();
 
   const navigation = useNavigation<AppNavigatorRoutesProps>();
 
-  async function handleCreateExpense(data: createExpenseData) {
+  async function getUserExpenseById(expenseId: string) {
+    const data = await getExpenseById(expenseId);
+
+    const expense: ExpenseResponse = data.expense;
+
+    setValue("description", expense.description);
+    setValue("amountInCents", expense.amount_in_cents / 100);
+    setValue("date", new Date(expense.date));
+  }
+
+  async function handleUpdateExpense(data: updateExpenseData) {
     try {
-      await createExpense(data);
+      await updateExpense({ ...data, id });
 
       toast.show({
         placement: "top",
@@ -48,20 +74,21 @@ export function Expenses() {
         render: ({ id }) => (
           <ToastMessage
             id={id}
-            title="Despesa criada com sucesso!"
+            title="Despesa atualizada com sucesso!"
             action="success"
           />
         ),
       });
 
-      reset();
+      navigation.navigate("history");
     } catch (error) {
       const isAppError = error instanceof AppError;
 
       const title = isAppError
         ? error.message
-        : "Não foi possível criar a despesa. Tente novamente mais tarde.";
+        : "Não foi possível atualizar a despesa. Tente novamente mais tarde.";
 
+      // toast de erro
       toast.show({
         placement: "top",
         render: ({ id }) => (
@@ -74,6 +101,12 @@ export function Expenses() {
   function handleNavigateToHistory() {
     navigation.navigate("history");
   }
+
+  useFocusEffect(
+    useCallback(() => {
+      getUserExpenseById(id);
+    }, [id])
+  );
 
   return (
     <Center flex={1} px="$12">
@@ -129,7 +162,7 @@ export function Expenses() {
           )}
         />
 
-        <Button label={"SALVAR"} onPress={handleSubmit(handleCreateExpense)} />
+        <Button label={"SALVAR"} onPress={handleSubmit(handleUpdateExpense)} />
         <Button label="HISTÓRICO" onPress={handleNavigateToHistory} />
       </VStack>
     </Center>
