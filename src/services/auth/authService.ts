@@ -1,28 +1,23 @@
-import * as authResource from './authResource'
+import * as authResource from "./authResource";
 
 async function signIn(email: string, password: string) {
-  const data = await authResource.signIn(email, password)
+  const data = await authResource.signIn(email, password);
 
-  return data
+  return data;
 }
 
-async function signUp({
-  name,
-  email,
-  birthday,
-  password,
-}: authResource.SignUpRequest) {
-  await authResource.signUp({ name, email, birthday, password })
+async function signUp(data: authResource.SignUpRequest) {
+  await authResource.signUp(data);
 }
 
 async function signOut() {
-  await authResource.signOut()
+  await authResource.signOut();
 }
 
 async function getAuthToken() {
-  const token = authResource.getAuthToken()
+  const token = authResource.getAuthToken();
 
-  return token
+  return token;
 }
 
-export { signIn, signUp, signOut, getAuthToken }
+export { signIn, signUp, signOut, getAuthToken };

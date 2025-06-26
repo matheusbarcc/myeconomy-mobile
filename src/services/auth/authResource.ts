@@ -1,60 +1,50 @@
-import { api } from "../../lib/axios"
-import { getItem, removeItem, setItem } from "../../storage/localStorage"
-import { AUTH_TOKEN_STORAGE } from "../../storage/storageConfig"
+import { api } from "../../lib/axios";
+import { getItem, removeItem, setItem } from "../../storage/localStorage";
+import { AUTH_TOKEN_STORAGE } from "../../storage/storageConfig";
 
 type SignUpRequest = {
-  name: string
-  email: string
-  birthday: string
-  password: string
-}
+  name: string;
+  email: string;
+  birthday: Date;
+  password: string;
+  password_confirmation: string;
+};
 
 async function signIn(email: string, password: string) {
   try {
-    const { data } = await api.post('/signin', {
+    const { data } = await api.post("/signin", {
       email,
-      password
-    })
+      password,
+    });
 
-    await setItem(AUTH_TOKEN_STORAGE, data.token)
+    await setItem(AUTH_TOKEN_STORAGE, data.token);
 
-    return data
+    return data;
   } catch (error) {
-    throw error
+    throw error;
   }
-
 }
 
-async function signUp({
-  name,
-  email,
-  birthday,
-  password,
-}: SignUpRequest) {
+async function signUp(data: SignUpRequest) {
   try {
-    await api.post('/signup', {
-      name,
-      email,
-      birthday,
-      password,
-    })
+    await api.post("/signup", data);
   } catch (error) {
-    throw error
+    throw error;
   }
 }
 
 async function signOut() {
   try {
-    await removeItem(AUTH_TOKEN_STORAGE)
+    await removeItem(AUTH_TOKEN_STORAGE);
   } catch (error) {
-    throw error
+    throw error;
   }
 }
 
 async function getAuthToken() {
-  const token = getItem(AUTH_TOKEN_STORAGE)
+  const token = getItem(AUTH_TOKEN_STORAGE);
 
-  return token
+  return token;
 }
 
-export { SignUpRequest, signIn, signUp, signOut, getAuthToken }
+export { SignUpRequest, signIn, signUp, signOut, getAuthToken };

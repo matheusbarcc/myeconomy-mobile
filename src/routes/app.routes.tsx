@@ -153,14 +153,14 @@ export function AppRoutes() {
           tabBarItemStyle: { display: "none" },
         }}
       />
-      <Screen
+      {/* <Screen
         name="consult"
         component={Consult}
         options={{
           tabBarButton: () => null,
           tabBarItemStyle: { display: "none" },
         }}
-      />
+      /> */}
     </Navigator>
   );
 }
