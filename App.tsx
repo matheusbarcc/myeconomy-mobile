@@ -3,6 +3,7 @@ import { StatusBar } from "react-native";
 import { config } from "./config/gluestack-ui.config";
 import { Home } from "@/screens/Home";
 import { Routes } from "@/routes";
+import { AuthContextProvider } from "@/contexts/AuthContext";
 
 export default function App() {
   return (
@@ -12,7 +13,9 @@ export default function App() {
         backgroundColor="transparent"
         translucent
       />
-      <Routes />
+      <AuthContextProvider>
+        <Routes />
+      </AuthContextProvider>
     </GluestackUIProvider>
   );
 }
