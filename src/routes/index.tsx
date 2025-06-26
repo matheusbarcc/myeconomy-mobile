@@ -18,8 +18,8 @@ export function Routes() {
     <Box flex={1} bg="$background">
       <NavigationContainer>
         {/* {authState?.authenticated ? <AppRoutes /> : <AuthRoutes />} */}
-        <AppRoutes />
-        {/* <AuthRoutes /> */}
+        {/* <AppRoutes /> */}
+        <AuthRoutes />
       </NavigationContainer>
     </Box>
   );
